@@ -15,6 +15,7 @@ const Total = (cartItems: CartItem[]): number => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 };
 
+//Obtenemos lo que hay en el carrito y el total
 export async function GET() {
     try {
         const response: CartResponse = { items: cart, total: Total(cart) };
@@ -24,23 +25,25 @@ export async function GET() {
         return NextResponse.json({ message: 'Failed to fetch cart' }, { status: 500 });
     }
  } 
- 
+// Añadimos un producto al carrito
 export async function POST(request: NextRequest)
 {
     try {
         const body: AddToCartRequest = await request.json();
         const { productId } = body;
 
+        // Validamos que el productId exista
         if (!productId) {
             return NextResponse.json({ message: 'Product ID is required' }, { status: 400 });
         }
-
+        // Buscamos el producto en la lista de productos
         const product = products.find(p => p.id === parseInt(productId.toString()));
 
+        // Si no existe el producto, devolvemos un error
         if (!product) {
             return NextResponse.json({ message: 'Product not found' }, { status: 404 });
         }
-
+        // Verificamos si el producto ya está en el carrito
         const existingItem = cart.findIndex(item => item.id === product.id);
 
         if (existingItem !== -1) {
