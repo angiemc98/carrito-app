@@ -18,10 +18,11 @@ La solución incluye **frontend** y **API backend** en un mismo proyecto, con co
 ---
 
 ## ⚙️ Instalación y ejecución
+Asegurarse de tener Nodejs versiones superiores a la 13
 
 ### 1️⃣ Clonar el repositorio
 ```bash
-git clone url
+git clone https://github.com/angiemc98/carrito-app.git
 cd carrito-app
 npm install
 npm run dev
