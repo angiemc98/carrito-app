@@ -49,56 +49,62 @@ export default function Optimize() {
     };
 
     return (
-        <div className="section">
-            <h2>Optimización de Productos</h2>
-            <p>Optimiza tus productos según tu presupuesto.</p>
+        <div className="optimize-section">
+  <h2>Optimización de Productos</h2>
+  <p>Optimiza tus productos según tu presupuesto.</p>
 
-            <div style={{ marginBottom: "1rem" }}>
-                <label>
-                    Presupuesto: $
-                    <input
-                        type="number"
-                        value={budget}
-                        onChange={(e) => setBudget(Number(e.target.value))}
-                        min="0"
-                        style={{ marginLeft: "0.5rem" }}
-                    />
-                </label>
-                <button onClick={handleOptimize} className="add-to-cart-btn" style={{marginLeft: "1rem"}}>
-                    Optimizar
-                </button>
-        </div>
-            <h3>Productos disponibles</h3>
-            <ul>
-                {products.map((product) => (
-                    <li key={product.id}>
-                        {product.name} - ${product.price}
-                    </li>
-                ))}
-            </ul>
-            {loading && <p>Optimizando...</p>}
-            {error && <p style = {{color: "red"}}>{error}</p>}
-            
-            { result && (
-                <div style={{ marginTop: "1rem" }}>
-                    <h4>Resultados de la Optimización</h4>
-                    <ul>
-                        {result.item.length > 0 ? (
-                            <>
-                            <ul>
-                                {result.item.map((p) => (
-                                    <li key={p.id}>
-                                        {p.name} - ${p.price}
-                                    </li>
-                                ))}
-                            </ul>
-                            </>
-                        ) : (
-                            <p>No se encontraron combinaciones dentro del presupuesto.</p>
-                    )}
-                    </ul>
-                </div>
-            )}
+  <div className="budget-input">
+    <label htmlFor="budget">Presupuesto:</label>
+    <input
+      id="budget"
+      type="number"
+      value={budget}
+      onChange={(e) => setBudget(Number(e.target.value))}
+      min="0"
+    />
+    <button
+      onClick={handleOptimize}
+      className="optimize-btn"
+      type="button"
+    >
+      Optimizar
+    </button>
+  </div>
+
+  <h3>Productos disponibles</h3>
+  <div className="products-grid">
+    {products.map((product) => (
+      <div key={product.id} className="product-card">
+        <h4>{product.name}</h4>
+        <p className="price">${product.price}</p>
+      </div>
+    ))}
+  </div>
+
+  {loading && <p>Optimizando...</p>}
+  {error && <p style={{ color: "red" }}>{error}</p>}
+
+  {result && (
+    <div className="optimization-result">
+      <h4>Resultados de la Optimización</h4>
+      {result.item.length > 0 ? (
+        <div className="products-grid">
+          {result.item.map((p) => (
+            <div key={p.id} className="product-card highlight">
+              <h4>{p.name}</h4>
+              <p className="price">${p.price}</p>
             </div>
+          ))}
+        </div>
+      ) : (
+        <p>No se encontraron combinaciones dentro del presupuesto.</p>
+      )}
+      <div className="result-total">
+        <strong>Total: ${result.total} / ${budget}</strong>
+      </div>
+    </div>
+  )}
+</div>
+
     );
 }

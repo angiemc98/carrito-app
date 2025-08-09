@@ -4,6 +4,7 @@ import Cart from "./components/Cart";
 import React from "react";
 import ProductList from "./components/ProductList";
 import Optimize from "./components/Optimize";
+import { toast } from 'react-toastify';
 
 
 const Home: React.FC = () => {
@@ -22,11 +23,10 @@ const Home: React.FC = () => {
         const data = await response.json();
 
         setCartRefresh(prev => prev + 1);
-        alert('Producto agregado al carrito');
+        toast.success(data.message);
       } else {
         const error: ApiError = await response.json();
-        alert(`Error: ${error.message}`);
-        
+        toast.error(`Error: ${error.message}`);
       }
     } catch (error) {
       console.error('Error adding product to cart:', error);
@@ -43,11 +43,14 @@ const Home: React.FC = () => {
         <div className="section">
           <ProductList onAddToCart={handleAddToCart} />
         </div>
-        <div className="section">
-          <Cart refreshTrigger={cartRefreh} />
-        </div>
-        <div className="section">
-          <Optimize />
+        <div className="main-layout">
+          <div className="section">
+            <Optimize />
+          </div>
+          <div className="section">
+            <Cart refreshTrigger={cartRefreh} />
+          </div>
+          
         </div>
 
       </main>
