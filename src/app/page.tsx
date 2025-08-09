@@ -9,7 +9,8 @@ import { toast } from 'react-toastify';
 
 const Home: React.FC = () => {
   const [cartRefreh, setCartRefresh] = React.useState<number>(0);
-  
+
+  // Función para manejar la adición de productos al carrito
   const handleAddToCart = async (productId: number): Promise<void> => {
     try {
       const response = await fetch('/api/cart', {
@@ -19,6 +20,7 @@ const Home: React.FC = () => {
         },
         body: JSON.stringify({ productId }),
       });
+      // Verificamos si la respuesta es exitosa
       if (response.ok) {
         const data = await response.json();
 

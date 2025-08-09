@@ -2,21 +2,10 @@
 import { AddToCartRequest, AddToCartResponse, CartItem, CartResponse, Product } from '@/types/product';
 import { console } from 'inspector';
 import { NextResponse, NextRequest } from 'next/server';
+import { products } from '@/data/products';
 
 let cart: CartItem[] = [];
 
-const products: Product[] = [
-    { id: 1, name: 'Product A', price: 100 },
-    { id: 2, name: 'Product B', price: 150 },
-    { id: 3, name: 'Product C', price: 200 },
-    { id: 4, name: 'Product D', price: 250 },
-    { id: 5, name: 'Product E', price: 300 },
-    { id: 6, name: 'Product F', price: 350 },
-    { id: 7, name: 'Product G', price: 400 },
-    { id: 8, name: 'Product H', price: 450 },
-    { id: 9, name: 'Product I', price: 500 },
-    { id: 10, name: 'Product J', price: 550 },   
-];
 
 const Total = (cartItems: CartItem[]): number => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -58,7 +47,7 @@ export async function POST(request: NextRequest)
         } else {
             cart.push({...product, quantity: 1 });
         }
-
+        // Añadimos el producto al carrito
         const response: AddToCartResponse = {
             message: 'Product added to cart',
             cart,
@@ -70,11 +59,14 @@ export async function POST(request: NextRequest)
     }
 }
 
+// Actualizamos la cantidad del producto directamente en el carrito
 export async function PUT(request: NextRequest) {
     const {productId, quantity} = await request.json();
 
+    //  Validamos que la cantidad sea válida
     if (quantity <= 0) {
         cart = cart.filter(item => item.id !== productId);
+        // Si la cantidad es 0 o negativa, eliminamos el producto del carrito
     } else {
         const item = cart.find(item => item.id === productId);
         if (item) {
@@ -87,6 +79,7 @@ export async function PUT(request: NextRequest) {
     });
 }
 
+//Limpiamos el carrito
 export async function DELETE() {
     try {
         cart = [];

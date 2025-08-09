@@ -1,10 +1,8 @@
 'use client';
-
 import { OptimizationResponse, Product } from "@/types/product";
 import React, { useState, useEffect } from "react";
 
-
-
+// Componente de optimización
 export default function Optimize() {
     const [products, setProducts] = useState<Product[]>([]);
     const [budget, setBudget] = useState<number>(300);
@@ -12,18 +10,21 @@ export default function Optimize() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Efecto para obtener los productos al montar el componente
     useEffect(() => {
         fetch('/api/products')
         .then((res) => res.json())
         .then((data) => setProducts(data))
         .catch((error) => setError("Error fetching products"));
     }, []);
+    //Funcion para manejar la optimización
     const handleOptimize = async () => {
         setLoading(true);
         setError(null);
         setResult(null);
 
         try {
+          // Enviamos la solicitud de optimización
             const res = await fetch('/api/optimize', {
                 method: 'POST',
                 headers: {

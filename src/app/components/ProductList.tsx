@@ -2,7 +2,7 @@
 import { Product } from "@/types/product";
 import React, {useState, useEffect} from "react";
 
-
+// Props para el componente de lista de productos
 interface ProductListProps {
     onAddToCart: (productId: number) => Promise<void>;
 }
@@ -11,11 +11,11 @@ interface ProductListProps {
 const ProductList: React.FC<ProductListProps> = ({ onAddToCart }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    
+    // Efecto para obtener los productos al montar el componente
     useEffect(() => {
         fetchProducts()
     }, []);
-
+    // Función para obtener los productos
     const fetchProducts = async (): Promise<void> => {
         try {
             const response = await fetch('/api/products');
@@ -30,6 +30,7 @@ const ProductList: React.FC<ProductListProps> = ({ onAddToCart }) => {
             setLoading(false);
         }
     };
+    // Función para manejar la adición al carrito
     const handleAddToCart = async (productId: number): Promise<void> => {
         await onAddToCart(productId);
     };

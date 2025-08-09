@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   description: "API y carrito de compras con Typescript y Next.js",
 };
 
+// Componente raíz
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,10 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>{children}</body>
-       <>
-
       <ToastContainer position="top-right" autoClose={3000} />
-      </>
     </html>
     
   );
