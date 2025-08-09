@@ -1,5 +1,6 @@
 
 import { AddToCartRequest, AddToCartResponse, CartItem, CartResponse, Product } from '@/types/product';
+import { console } from 'inspector';
 import { NextResponse, NextRequest } from 'next/server';
 
 let cart: CartItem[] = [];
@@ -67,6 +68,23 @@ export async function POST(request: NextRequest)
     } catch (error) {
         return NextResponse.json({ message: 'Failed to add product to cart' }, { status: 500 });
     }
+}
+
+export async function PUT(request: NextRequest) {
+    const {productId, quantity} = await request.json();
+
+    if (quantity <= 0) {
+        cart = cart.filter(item => item.id !== productId);
+    } else {
+        const item = cart.find(item => item.id === productId);
+        if (item) {
+            item.quantity = quantity;
+        }
+    }
+    return NextResponse.json({
+       items: cart,
+       total: Total(cart)
+    });
 }
 
 export async function DELETE() {

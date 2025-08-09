@@ -3,6 +3,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import Cart from "./components/Cart";
 import React from "react";
 import ProductList from "./components/ProductList";
+import Optimize from "./components/Optimize";
 
 
 const Home: React.FC = () => {
@@ -44,6 +45,9 @@ const Home: React.FC = () => {
         </div>
         <div className="section">
           <Cart refreshTrigger={cartRefreh} />
+        </div>
+        <div className="section">
+          <Optimize />
         </div>
 
       </main>

@@ -23,10 +23,12 @@ const Cart: React.FC<CartProps> = ({ refreshTrigger }) => {
                 throw new Error('Failed to fetch cart');
             }
             const data: CartResponse = await responser.json();
-            setCart(data.items);
-            setTotal(data.total);
+            setCart(Array.isArray(data.items) ? data.items : []);
+            setTotal(data.total ?? 0);
         } catch (error) {
             console.error('Error fetching cart:', error);
+            setCart([]);
+            setTotal(0);
         } finally {
             setLoading(false);
         }
@@ -45,22 +47,44 @@ const Cart: React.FC<CartProps> = ({ refreshTrigger }) => {
             console.error('Error clearing cart:', error);
         }
     };
+
+    const handleQuantityChange = async (productId: number, quantity: number): Promise<void> => {
+        try {
+            const response= await fetch('/api/cart', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId, quantity }),
+            });
+            if (response.ok) {
+                const updatedCart= await response.json();
+                setCart(Array.isArray(updatedCart.items) ? updatedCart.items : []);
+                setTotal(updatedCart.total ?? 0);
+            } else {
+                console.error('Error updating quantity:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+        }
+    };
+
     return (
         <div className="cart-container">
             <h2>Carrito de Compras</h2>
             {loading ? (
                 <div className="loading">Actualizando Carrito...</div>
-            ) : (
+            ) : cart.length === 0 ? (
                 <div className="loading">
-                    {cart.length === 0 ? (
-                        <p className="empty-cart">El carrito está vacío.</p>
-                    ) : (
-                        <>
-                        <div className="cart-items">
-                            {cart.map((item: CartItem) => (
+                    <p className="empty-cart">El carrito está vacío.</p>
+                </div>
+            ) : (
+                <>
+                <div className="cart-items">
+                    {cart.map((item: CartItem) => (
                                 <div key={item.id} className="cart-item">
                                    <span className="item-name">{item.name}</span>
-                                   <span className="item-quantity">Cantidad: {item.quantity}</span>
+                                   <input type="number" min="0" style={{ width: '60px' }} value={item.quantity} onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))} />
                                    <span className="item-price">Precio: ${item.price}</span>
                                    <span className="item-total">Total: ${item.price * item.quantity}</span>
                                 </div>
@@ -82,8 +106,4 @@ const Cart: React.FC<CartProps> = ({ refreshTrigger }) => {
                    
                 </div>
             )}
-
-        </div>
-    );
-};
 export default Cart;
